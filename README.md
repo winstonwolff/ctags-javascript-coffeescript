@@ -12,7 +12,8 @@ agile programmer would.  Now we can adjust the configuration and see that
 all our situations are handled.
 
 This configuration started from here:
-  https://github.com/majutsushi/tagbar/wiki#exuberant-ctags-vanilla
-  https://github.com/majutsushi/tagbar/wiki#coffeescript
+
+ - https://github.com/majutsushi/tagbar/wiki#exuberant-ctags-vanilla
+ - https://github.com/majutsushi/tagbar/wiki#coffeescript
 
 Incedentally, if you are interested in electronics, check out [Electropoclypse](http://electropocalypse.com)
