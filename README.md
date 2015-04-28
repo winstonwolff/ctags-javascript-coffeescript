@@ -1,13 +1,18 @@
-# Exhuberant CTAGS configuration for Javascript and Coffeescript
+# Exuberant CTAGS configuration for JavaScript and CoffeeScript
 
-There are a bunch of sample regex's around for Javascript and Coffeescript. I found
-they mostly worked but would fail for some situations. I would find a different configuration
-which fixed my current need but broke something else on another project.
+[Exuberant CTAGS](http://ctags.sourceforge.net) doesn't support CoffeeScript
+natively and its JavaScript support doesn't handle modern usage.
 
-So I wrote some automated tests to check all the different scenarios as any
-agile programmer would.
+There are a bunch of sample regex's around to solve this. However I found
+they worked most of the time and would fail for some situations. Different sets of 
+configurations would fail for different bits of code. How can we unify them?
+
+I wrote some automated tests to check all the different scenarios as any
+agile programmer would.  Now we can adjust the configuration and see that
+all our situations are handled.
 
 This configuration started from here:
   https://github.com/majutsushi/tagbar/wiki#exuberant-ctags-vanilla
   https://github.com/majutsushi/tagbar/wiki#coffeescript
 
+Incedentally, if you are interested in electronics, check out [Electropoclypse](http://electropocalypse.com)
