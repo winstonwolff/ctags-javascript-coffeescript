@@ -7,7 +7,7 @@ import unittest
 import subprocess
 import tempfile
 
-CTAGS_CONF = '_ctags'
+CTAGS_CONF = 'ctags.conf'
 
 def ctags_for(lang_suffix, code_sample):
     with tempfile.NamedTemporaryFile(mode='w', suffix=lang_suffix, delete=False) as f:
@@ -108,6 +108,14 @@ var object_class = {
             'object_method',
             '/^  object_method: function(){}$/;"',
             'u')
+
+    def test_assigned_function(self):
+        self.assertCtag(
+            'var assigned_function = function(){}',
+            'assigned_function',
+            '/^var assigned_function = function(){}/;"',
+            'f')
+
 
 if __name__=='__main__':
     unittest.main()
