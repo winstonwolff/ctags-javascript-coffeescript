@@ -17,7 +17,7 @@ def ctags_for(lang_suffix, code_sample):
     
 def _run_ctags(sample_filename):
     out = subprocess.check_output(['ctags', 
-#        '--options=NONE', # ignore other configuration files
+        '--options=NONE', # ignore other configuration files
         '--options=' + CTAGS_CONF, 
         '-f-', 
         sample_filename])
