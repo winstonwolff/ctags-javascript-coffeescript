@@ -24,14 +24,19 @@ def _run_ctags(sample_filename):
     result = out.decode('utf-8')
     return result
 
-
-class CoffeescriptTest(unittest.TestCase):
+class CTagsTestCase(unittest.TestCase):
 
     def assertCtag(self, source_code, symbol, vim_search_cmd, symbol_type):
-        filepath, ctags_out = ctags_for('.coffee', source_code)
-        self.assertIn(
-            '{symbol}\t{filepath}\t{vim_search_cmd}\t{symbol_type}'.format(**locals()),
-            ctags_out)
+        filepath, ctags_out = ctags_for(self.lang_suffix(), source_code)
+        expected_line = '{symbol}\t{filepath}\t{vim_search_cmd}\t{symbol_type}'.format(**locals())
+        self.assertTrue( expected_line in ctags_out,
+            "Expected:\n    {}\nnot found in:\n    {}".format(expected_line, ctags_out))
+
+
+class CoffeescriptTest(CTagsTestCase):
+
+    def lang_suffix(self):
+        return '.coffee'
 
     def test_class_method(self):
         self.assertCtag(
@@ -82,13 +87,10 @@ class CoffeescriptTest(unittest.TestCase):
             '/^exports.exports_function = (a, b) ->/;"',
             'f')
 
-class JavascriptTest(unittest.TestCase):
+class JavascriptTest(CTagsTestCase):
 
-    def assertCtag(self, source_code, symbol, vim_search_cmd, symbol_type):
-        filepath, ctags_out = ctags_for('.js', source_code)
-        self.assertIn(
-            '{symbol}\t{filepath}\t{vim_search_cmd}\t{symbol_type}'.format(**locals()),
-            ctags_out)
+    def lang_suffix(self):
+        return '.js'
 
     def test_local_function(self):
         self.assertCtag(
@@ -111,11 +113,17 @@ var object_class = {
 
     def test_assigned_function(self):
         self.assertCtag(
-            'var assigned_function = function(){}',
+            'var assigned_function = function(){}\n',
             'assigned_function',
-            '/^var assigned_function = function(){}/;"',
+            '/^var assigned_function = function(){}$/;"',
             'f')
 
+    def test_function_in_namespace(self):
+        self.assertCtag(
+            'Phaser.Sprite = function (game, x, y, key, frame) {\n',
+            'Sprite',
+            '/^Phaser.Sprite = function (game, x, y, key, frame) {$/;"',
+            'f')
 
 if __name__=='__main__':
     unittest.main()
