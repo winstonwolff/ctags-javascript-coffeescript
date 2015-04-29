@@ -6,8 +6,15 @@
 import unittest
 import subprocess
 import tempfile
+import re
 
 CTAGS_CONF = 'ctags.conf'
+
+def indent(s, num_spaces):
+    spaces = ' ' * num_spaces
+    lines = s.split('\n')
+    indentedLines = [spaces + l for l in lines]
+    return '\n'.join(indentedLines)
 
 def ctags_for(lang_suffix, code_sample):
     with tempfile.NamedTemporaryFile(mode='w', suffix=lang_suffix, delete=False) as f:
@@ -28,9 +35,14 @@ class CTagsTestCase(unittest.TestCase):
 
     def assertCtag(self, source_code, symbol, vim_search_cmd, symbol_type):
         filepath, ctags_out = ctags_for(self.lang_suffix(), source_code)
+
         expected_line = '{symbol}\t{filepath}\t{vim_search_cmd}\t{symbol_type}'.format(**locals())
         self.assertTrue( expected_line in ctags_out,
-            "Expected:\n    {}\nnot found in:\n    {}".format(expected_line, ctags_out))
+            "Expected:\n    {}\nnot found in:\n{}".format(expected_line, indent(ctags_out, 4)))
+
+        occurances = re.findall('{}\\t'.format(symbol), ctags_out)
+        self.assertEqual(1, len(occurances), 
+            "expected symbol to appear once but found multiple:\n{}".format(indent(ctags_out, 4)))
 
 
 class CoffeescriptTest(CTagsTestCase):
@@ -92,11 +104,11 @@ class JavascriptTest(CTagsTestCase):
     def lang_suffix(self):
         return '.js'
 
-    def test_local_function(self):
+    def test_global_function(self):
         self.assertCtag(
-            'function B_local_function(a, b){}',
-            'B_local_function',
-            '/^function B_local_function(a, b){}/;"',
+            'function global_function(a, b){}\n',
+            'global_function',
+            '/^function global_function(a, b){}$/;"',
             'f')
 
     def test_object_method(self):
@@ -109,7 +121,7 @@ var object_class = {
             ''',
             'object_method',
             '/^  object_method: function(){}$/;"',
-            'u')
+            'f')
 
     def test_assigned_function(self):
         self.assertCtag(
