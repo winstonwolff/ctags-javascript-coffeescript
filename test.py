@@ -31,10 +31,12 @@ def _run_ctags(sample_filename):
     result = out.decode('utf-8')
     return result
 
+
 class CTagsTestCase(unittest.TestCase):
 
     def assertCtag(self, source_code, symbol, vim_search_cmd, symbol_type):
         filepath, ctags_out = ctags_for(self.lang_suffix(), source_code)
+        print('ctags_out=', ctags_out)
 
         expected_line = '{symbol}\t{filepath}\t{vim_search_cmd}\t{symbol_type}'.format(**locals())
         self.assertTrue( expected_line in ctags_out,
@@ -55,6 +57,13 @@ class CoffeescriptTest(CTagsTestCase):
             '  create:  ->',
             'create',
             '/^  create:  ->/;"', 
+            'm')
+
+    def test_at_class_method(self):
+        self.assertCtag(
+            '  @_setWorkspaceXml: (workspace, codeXml) ->',
+            '_setWorkspaceXml',
+            '/^  @_setWorkspaceXml: (workspace, codeXml) ->/;"', 
             'm')
 
     def test_class_constructor(self):
