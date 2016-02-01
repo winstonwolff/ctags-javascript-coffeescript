@@ -154,6 +154,29 @@ var myfunc = function(){};
             expect_symbol="bar.var_bind_event",
             expect_symbol_type='f')
 
+    def test_rspec_style_tests(self):
+        c = self.ctags_tester('''
+describe("Dog", function() {
+  describe("bark", function() {
+    context("while running", function() {
+      it("is loud", function() {
+      });
+    });
+  });
+}); 
+            ''')
+        c.check(
+            expect_symbol='.Dog',
+            expect_symbol_type='f')
+        c.check(
+            expect_symbol='.  bark',
+            expect_symbol_type='f')
+        c.check(
+            expect_symbol='.    while running',
+            expect_symbol_type='f')
+        c.check(
+            expect_symbol='.      is loud',
+            expect_symbol_type='f')
 
 if __name__=='__main__':
     unittest.main()
