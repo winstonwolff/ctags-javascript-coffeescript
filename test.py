@@ -92,18 +92,42 @@ var object_class = {
             expect_vim_search_cmd='/^  object_method: function(){}$/;"',
             expect_symbol_type='f')
 
-    def test_assigned_function(self):
-        c = self.ctags_tester('var assigned_function = function(){}\n')
+    def test_functions(self):
+        c = self.ctags_tester('''
+            var assigned_function = function(){}
+            Phaser.Sprite = function (game, x, y, key, frame) {}
+            ''')
         c.check(
             expect_symbol='assigned_function',
-            expect_vim_search_cmd='/^var assigned_function = function(){}$/;"',
+            expect_vim_search_cmd='/^            var assigned_function = function(){}$/;"',
             expect_symbol_type='f')
-
-    def test_function_in_namespace(self):
-        c = self.ctags_tester('Phaser.Sprite = function (game, x, y, key, frame) {\n')
         c.check(
             expect_symbol='Sprite',
-            expect_vim_search_cmd='/^Phaser.Sprite = function (game, x, y, key, frame) {$/;"',
+            expect_vim_search_cmd='/^            Phaser.Sprite = function (game, x, y, key, frame) {}$/;"',
+            expect_symbol_type='f')
+
+    def test_var(self):
+        c = self.ctags_tester('''
+var myarray = [1, 2];
+var myobject = {a: 1};
+var myvar = 1;
+var myfunc = function(){};
+            ''')
+        c.check(
+            expect_symbol='myarray',
+            expect_vim_search_cmd='/^var myarray = [1, 2];$/;"',
+            expect_symbol_type='a')
+        c.check(
+            expect_symbol='myobject',
+            expect_vim_search_cmd='/^var myobject = {a: 1};$/;"',
+            expect_symbol_type='o')
+        c.check(
+            expect_symbol='myvar',
+            expect_vim_search_cmd='/^var myvar = 1;$/;"',
+            expect_symbol_type='r')
+        c.check(
+            expect_symbol='myfunc',
+            expect_vim_search_cmd='/^var myfunc = function(){};$/;"',
             expect_symbol_type='f')
 
 

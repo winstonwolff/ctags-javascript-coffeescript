@@ -47,7 +47,9 @@ class CTagsTester:
             '--options=NONE', # ignore other configuration files
             '--options=' + ctags_conf_fname, 
             '-f-', 
-            sample_filename], stderr=subprocess.STDOUT)
+            sample_filename], 
+            stderr=subprocess.STDOUT  # Hide this message: "No options will be read from files or environment"
+        )
         result = out.decode('utf-8')
         return result
 
