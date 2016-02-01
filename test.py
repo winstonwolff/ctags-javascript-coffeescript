@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-# Ctags output should be
-# <symbol name> \t <filename> \t <vim command to find that line> \t <symbol type>
-
 import unittest
 import _ctags_tester
 
