@@ -28,7 +28,7 @@ class CTagsTester:
         with self.testcase.subTest(expect_symbol_is_unique=expect_symbol):
             occurances = re.findall('{}\\t'.format(expect_symbol), self.ctags_out)
             num_found = len(occurances)
-            err_msg = "\n--- Expect symbol {} to appear once but found {} in ctags output:\n{}\n---\n".format(
+            err_msg = "\n--- Expect '{}' to appear once but found {} in ctags output:\n{}\n---\n".format(
                 expect_symbol, num_found, indent(self.ctags_out, 4))
             self.testcase.assertEqual(1, num_found, err_msg )
 
