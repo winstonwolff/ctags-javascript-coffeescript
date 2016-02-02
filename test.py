@@ -130,6 +130,32 @@ var myfunc = function(){};
             expect_vim_search_cmd='/^var myfunc = function(){};$/;"',
             expect_symbol_type='f')
 
+    def test_jquery(self):
+        c = self.ctags_tester('''
+            $("#foo").bind("dollar_bind_event", function() {
+            jQuery('#foo').bind("jquery_bind_event", function() {
+            $(bar).bind("var_bind_event", function() {
+            ''')
+#             $("#foo").click('click_event', function() {
+#             $("#foo").dblclick('click_event', function() {
+#             $("#foo").focus('click_event', function() {
+#             $("#foo").focusin('click_event', function() {
+#             $("#foo").focusout('click_event', function() {
+#             $("#foo").hover('click_event', function() {
+#             $("#foo").keydown('click_event', function() {
+#             $("#foo").keypress('click_event', function() {
+#             $("#foo").keyup('click_event', function() {
+#             ''')
+        c.check(
+            expect_symbol='"#foo".dollar_bind_event',
+            expect_symbol_type='f')
+        c.check(
+            expect_symbol="'#foo'.jquery_bind_event",
+            expect_symbol_type='f')
+        c.check(
+            expect_symbol="bar.var_bind_event",
+            expect_symbol_type='f')
+
 
 if __name__=='__main__':
     unittest.main()

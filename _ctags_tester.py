@@ -17,16 +17,22 @@ class CTagsTester:
         self.testcase.assertTrue(os.path.exists(ctags_conf_fname), "Expect {} to exist".format(ctags_conf_fname))
         self.filepath, self.ctags_out = self._ctags_for(lang_suffix, ctags_conf_fname, source_code)
 
-    def check(self, expect_symbol, expect_vim_search_cmd, expect_symbol_type):
+    def check(self, expect_symbol, expect_symbol_type, expect_vim_search_cmd=None):
         # should produce this line in the 'tags' file
         with self.testcase.subTest(expect_symbol=expect_symbol, expect_vim_search_cmd=expect_vim_search_cmd):
-            expected_line = '{expect_symbol}\t{self.filepath}\t{expect_vim_search_cmd}\t{expect_symbol_type}'.format(**locals())
+            expected_line = '^{symbol}\\t{filepath}\\t{search_cmd}\\t{symbol_type}'.format(
+                symbol = re.escape(expect_symbol), 
+                filepath = re.escape(self.filepath),
+                search_cmd = re.escape(expect_vim_search_cmd) if expect_vim_search_cmd else '[^\t]*',
+                symbol_type = re.escape(expect_symbol_type))
             err_msg = "\n--- Expect this line:\n    {}\n--- to be in ctags output:\n{}\n---\n".format(expected_line, indent(self.ctags_out, 4))
-            self.testcase.assertTrue( expected_line in self.ctags_out, err_msg)
+            search_successful = re.search(expected_line, self.ctags_out, re.MULTILINE)
+            self.testcase.assertIsNotNone(search_successful, err_msg)
 
         # Check that only one line for the symbol was produced
         with self.testcase.subTest(expect_symbol_is_unique=expect_symbol):
-            occurances = re.findall('{}\\t'.format(expect_symbol), self.ctags_out)
+            lines = self.ctags_out.split('\n')
+            occurances = [line for line in lines if line.startswith(expect_symbol + '\t')]
             num_found = len(occurances)
             err_msg = "\n--- Expect '{}' to appear once but found {} in ctags output:\n{}\n---\n".format(
                 expect_symbol, num_found, indent(self.ctags_out, 4))
