@@ -73,38 +73,36 @@ class JavascriptTest(unittest.TestCase):
     def ctags_tester(self, source_code):
         return _ctags_tester.CTagsTester(self, '.js', CTAGS_CONF, source_code)
 
-    def test_global_function(self):
-        c = self.ctags_tester('function global_function(a, b){}\n')
-        c.check(
-            expect_symbol='global_function',
-            expect_vim_search_cmd='/^function global_function(a, b){}$/;"',
-            expect_symbol_type='f')
-
-    def test_object_method(self):
+    def test_functions(self):
         c = self.ctags_tester('''
+function global_function(a, b){}
+
 var object_class = {
   constructor: function(){}
   object_method: function(){}
 }
+
+var assigned_function = function(){}
+
+Namespace.namespaced_func = function (game, x, y, key, frame) {}
             ''')
+        c.check(
+            expect_symbol='global_function',
+            expect_vim_search_cmd='/^function global_function(a, b){}$/;"',
+            expect_symbol_type='f')
         c.check(
             expect_symbol='object_method',
             expect_vim_search_cmd='/^  object_method: function(){}$/;"',
             expect_symbol_type='f')
-
-    def test_functions(self):
-        c = self.ctags_tester('''
-            var assigned_function = function(){}
-            Phaser.Sprite = function (game, x, y, key, frame) {}
-            ''')
         c.check(
             expect_symbol='assigned_function',
-            expect_vim_search_cmd='/^            var assigned_function = function(){}$/;"',
+            expect_vim_search_cmd='/^var assigned_function = function(){}$/;"',
             expect_symbol_type='f')
         c.check(
-            expect_symbol='Sprite',
-            expect_vim_search_cmd='/^            Phaser.Sprite = function (game, x, y, key, frame) {}$/;"',
+            expect_symbol='namespaced_func',
+            expect_vim_search_cmd='/^Namespace.namespaced_func = function (game, x, y, key, frame) {}$/;"',
             expect_symbol_type='f')
+
 
     def test_var(self):
         c = self.ctags_tester('''
