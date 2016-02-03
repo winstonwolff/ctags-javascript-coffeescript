@@ -170,9 +170,6 @@ var myfunc = function(){};
     def test_rspec_style_tests(self):
         '''
         Tags for blocks of Jasmine tests.
-        
-        Not very useful for jumping to symbols, but very useful if you are
-        using TagBar to view the structure of your spec file.
         '''
 
         c = self.ctags_tester('''
@@ -185,12 +182,15 @@ describe("Dog", function() {
   });
 }); 
             ''')
+        # Don't include indentation for `describe` so searching for tag will reveal specs.
         c.check(
-            expect_symbol='.Dog',
+            expect_symbol='Dog',
             expect_symbol_type='f')
         c.check(
-            expect_symbol='.  bark',
+            expect_symbol='bark',
             expect_symbol_type='f')
+
+        # For `context` and `it` blocks, include indentation so TagBar's output shows file structure
         c.check(
             expect_symbol='.    while running',
             expect_symbol_type='f')
