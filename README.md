@@ -17,14 +17,11 @@ The regex rules in ctags.conf will support these idioms:
 Functions & Methods in various forms:
 ```
 function global_function(a, b){}                -> global_function
-
 var object_class = {                            -> object_class
   constructor: function(){}
   object_method: function(){}                   -> object_method
 }
-
 var assigned_function = function(){}            -> asigned_function
-
 Namespace.namespaced_func = function() {}       -> namespaced_function
 ```
 
@@ -35,16 +32,18 @@ var myobject = {a: 1};                          -> myobject
 var myvar = 1;                                  -> myvar
 ```
 
-jQuery `bind` event handlers
+jQuery `bind` event handlers. Because the extracted symbol names include both the
+selector and the event, they are not useful for searches, but are very handy in
+the TagBar window to see your file's structure.
 ```
 $("#foo").bind("dollar_bind_event", function() {        -> "#foo".dollar_bind_event
 jQuery('#foo').bind("jquery_bind_event", function() {   -> '#foo'.jquery_bind_event
 $(bar).bind("var_bind_event", function() {              -> bar.var_bind_event
 ```
 
-Symbols in RSpect style tests. 
+Symbols in RSpec style tests. 
 `describe()` blocks use the first parameter as the symbol name.
-`context()` and `it()` blocks include the lines indentation for use in TagBar
+`context()` and `it()` blocks include the line's indentation for use in TagBar
 so you can sort of see the file's nested structure
 ```
 describe("Dog", function() {                            -> Dog
@@ -54,7 +53,7 @@ describe("Dog", function() {                            -> Dog
 ```
 
 ## Coffeescript
-Classes and function are identified. When there is a namespace
+Classes and functions are identified. When there is a namespace
 prefix, or an `@` instance prefix, the symbol name is correctly extracted.
 ```
 create:  ->                                             -> create
