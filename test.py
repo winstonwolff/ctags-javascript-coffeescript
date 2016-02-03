@@ -105,6 +105,9 @@ Namespace.namespaced_func = function (game, x, y, key, frame) {}
 
 
     def test_var(self):
+        '''
+        Create tags for variables, arrays, and objects.
+        '''
         c = self.ctags_tester('''
 var myarray = [1, 2];
 var myobject = {a: 1};
@@ -129,10 +132,17 @@ var myfunc = function(){};
             expect_symbol_type='f')
 
     def test_jquery(self):
+        '''
+        Tags for jQuery bind() handlers.
+
+        It creates symbols like `#foo.click` which is great for viewing in TagBar
+        although less useful for jumping to tags.
+        '''
         c = self.ctags_tester('''
             $("#foo").bind("dollar_bind_event", function() {
             jQuery('#foo').bind("jquery_bind_event", function() {
             $(bar).bind("var_bind_event", function() {
+            jQuery( '#with_spaces' ).bind( "jquery_bind_event" , function() {
             ''')
 #             $("#foo").click('click_event', function() {
 #             $("#foo").dblclick('click_event', function() {
@@ -153,8 +163,18 @@ var myfunc = function(){};
         c.check(
             expect_symbol="bar.var_bind_event",
             expect_symbol_type='f')
+        c.check(
+            expect_symbol="'#with_spaces'.jquery_bind_event",
+            expect_symbol_type='f')
 
     def test_rspec_style_tests(self):
+        '''
+        Tags for blocks of Jasmine tests.
+        
+        Not very useful for jumping to symbols, but very useful if you are
+        using TagBar to view the structure of your spec file.
+        '''
+
         c = self.ctags_tester('''
 describe("Dog", function() {
   describe("bark", function() {
