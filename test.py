@@ -131,6 +131,30 @@ var myfunc = function(){};
             expect_vim_search_cmd='/^var myfunc = function(){};$/;"',
             expect_symbol_type='f')
 
+    def test_namespaced_vars(self):
+        c = self.ctags_tester('''
+my_namespace.myarray = [1, 2];
+my_namespace.myobject = {a: 1};
+my_namespace.myvar = 1;
+my_namespace.myfunc = function(){};
+            ''')
+        c.check(
+            expect_symbol='myarray',
+            expect_vim_search_cmd='/^my_namespace.myarray = [1, 2];$/;"',
+            expect_symbol_type='a')
+        c.check(
+            expect_symbol='myobject',
+            expect_vim_search_cmd='/^my_namespace.myobject = {a: 1};$/;"',
+            expect_symbol_type='o')
+        c.check(
+            expect_symbol='myvar',
+            expect_vim_search_cmd='/^my_namespace.myvar = 1;$/;"',
+            expect_symbol_type='r')
+        c.check(
+            expect_symbol='myfunc',
+            expect_vim_search_cmd='/^my_namespace.myfunc = function(){};$/;"',
+            expect_symbol_type='f')
+
     def test_jquery(self):
         '''
         Tags for jQuery bind() handlers.
