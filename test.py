@@ -222,5 +222,22 @@ describe("Dog", function() {
             expect_symbol='.      is loud',
             expect_symbol_type='f')
 
+class SCSSTest(unittest.TestCase):
+    def ctags_tester(self, source_code):
+        return _ctags_tester.CTagsTester(self, '.scss', CTAGS_CONF, source_code)
+
+    def test_mixin(self):
+        c = self.ctags_tester('''
+            @mixin medium_text {}
+            @function my_function {}
+            ''')
+        c.check(
+            expect_symbol='medium_text',
+            expect_symbol_type='m')
+        c.check(
+            expect_symbol='my_function',
+            expect_symbol_type='f')
+
+
 if __name__=='__main__':
     unittest.main()
